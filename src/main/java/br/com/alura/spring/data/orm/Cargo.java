@@ -28,6 +28,9 @@ public class Cargo {
 		this.cargo = cargo;
 	}
 	
+	@Override
+	public String toString() {
+		return "Cargo [id=" + id + ", cargo=" + cargo + "]";
+	}
 	
-
 }
