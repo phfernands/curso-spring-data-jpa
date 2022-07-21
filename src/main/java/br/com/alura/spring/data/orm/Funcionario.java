@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -20,15 +21,17 @@ public class Funcionario {
 	private Integer id;
 	private String nome;
 	private String cpf;
-	private BigDecimal salario;
+	private BigDecimal salario = BigDecimal.ZERO;
 
 	@Column(name = "data_contratação")
 	private LocalDate dataContratacao = LocalDate.now();
 
 	@ManyToOne
+	@JoinColumn(name = "cargo_id")
 	private Cargo cargo;
 
 	@ManyToOne
+	@JoinColumn(name = "unidade_trabalho_id")
 	private UnidadeTrabalho unidadeTrabalho;
 
 	public String getNome() {
@@ -78,5 +81,14 @@ public class Funcionario {
 	public LocalDate getDataContratacao() {
 		return dataContratacao;
 	}
+
+	@Override
+	public String toString() {
+		return "Funcionario [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", salario=" + salario
+				+ ", dataContratacao=" + dataContratacao + ", cargo=" + cargo + ", unidadeTrabalho=" + unidadeTrabalho
+				+ "]";
+	}
+	
+	
 
 }

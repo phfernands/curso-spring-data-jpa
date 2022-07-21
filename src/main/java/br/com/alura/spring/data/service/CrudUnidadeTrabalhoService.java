@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import org.springframework.stereotype.Service;
 
-import br.com.alura.spring.data.orm.Cargo;
 import br.com.alura.spring.data.orm.UnidadeTrabalho;
 import br.com.alura.spring.data.repository.UnidadeTrabalhoRepository;
 
@@ -13,7 +12,7 @@ import br.com.alura.spring.data.repository.UnidadeTrabalhoRepository;
 public class CrudUnidadeTrabalhoService {
 
 	private final UnidadeTrabalhoRepository trabalhoRepository;
-	private Boolean system;
+	private Boolean system = true;
 
 	public CrudUnidadeTrabalhoService(UnidadeTrabalhoRepository trabalhoRepository) {
 		this.trabalhoRepository = trabalhoRepository;
