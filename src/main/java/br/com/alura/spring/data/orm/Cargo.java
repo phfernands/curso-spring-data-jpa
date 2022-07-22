@@ -1,9 +1,9 @@
 package br.com.alura.spring.data.orm;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,8 +19,8 @@ public class Cargo {
 	private Integer id;
 	private String cargo;
 	
-	@OneToMany
-	private List<Funcionario> listaFuncionarios = new ArrayList<Funcionario>();
+	@OneToMany(mappedBy = "cargo", fetch = FetchType.EAGER)
+	private Set<Funcionario> listaFuncionarios;
 	
 	public Integer getId() {
 		return id;
@@ -35,7 +35,7 @@ public class Cargo {
 		this.cargo = cargo;
 	}
 	
-	public List<Funcionario> getListaFuncionarios() {
+	public Set<Funcionario> getListaFuncionarios() {
 		return listaFuncionarios;
 	}
 	@Override

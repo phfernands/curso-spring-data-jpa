@@ -1,13 +1,13 @@
 package br.com.alura.spring.data.orm;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -20,8 +20,8 @@ public class UnidadeTrabalho {
 	private String descricao;
 	private String endereco;
 	
-	@OneToMany
-	private List<Funcionario> listaFuncionarios = new ArrayList<Funcionario>();
+	@ManyToMany(mappedBy = "unidadeTrabalho", fetch = FetchType.EAGER)
+	private Set<Funcionario> funcionarios;
 
 	public String getDescricao() {
 		return descricao;

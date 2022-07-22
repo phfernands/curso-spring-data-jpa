@@ -6,48 +6,61 @@ import java.util.Scanner;
 import org.springframework.stereotype.Service;
 
 import br.com.alura.spring.data.orm.Cargo;
+import br.com.alura.spring.data.orm.Funcionario;
 import br.com.alura.spring.data.repository.CargoRepository;
 
 @Service
 public class CrudCargoService {
 
 	private final CargoRepository cargoRepository;
-	private Boolean system = true;
 
 	public CrudCargoService(CargoRepository cargoRepository) {
 		this.cargoRepository = cargoRepository;
 	}
 
 	public void inicial(Scanner scanner) {
-		System.out.println("Qual ação de cargo você deseja executar?");
-		System.out.println("0 - Sair");
-		System.out.println("1 - Salvar");
-		System.out.println("2 - Atualizar");
-		System.out.println("3 - Visualizar tabela de cargos");
-		System.out.println("4 - Deletar cargo");
-
-		int action = scanner.nextInt();
-
-		switch (action) {
-		case 1:
-			salvar(scanner);
-			break;
-
-		case 2:
-			atualizar(scanner);
-			break;
+		
+		Boolean system = true;
+		
+		while(system == true) {
 			
-		case 3:
-			visualizar();
-			break;
-			
-		case 4:
-			deletar(scanner);
+			System.out.println("Qual ação de cargo você deseja executar?");
+			System.out.println("0 - Sair");
+			System.out.println("1 - Salvar");
+			System.out.println("2 - Atualizar");
+			System.out.println("3 - Visualizar tabela de cargos");
+			System.out.println("4 - Deletar cargo");
+			System.out.println("5 - Visualizar funcionarios de cada cargo");
 
-		default:
-			system = false;
-			break;
+			int action = scanner.nextInt();
+
+			switch (action) {
+			case 1:
+				salvar(scanner);
+				break;
+
+			case 2:
+				atualizar(scanner);
+				break;
+				
+			case 3:
+				visualizar();
+				break;
+				
+			case 4:
+				deletar(scanner);
+				break;
+				
+			case 5:
+				funcionariosPorCargo(scanner);
+				break;
+
+			default:
+				system = false;
+				break;
+			}
 		}
+
 
 	}
 
@@ -97,6 +110,21 @@ public class CrudCargoService {
 		if(opicional.isPresent()) {
 			cargoRepository.deleteById(id);
 			System.out.println("Cargo deletado");
+		} else {
+			System.out.println("ID inválido");
+		}
+	}
+	
+	private void funcionariosPorCargo(Scanner scanner) {
+		System.out.println("Digite o ID do cargo desejado:");
+		Integer id = scanner.nextInt();
+		
+		Optional<Cargo> opicinal = cargoRepository.findById(id);
+		if(opicinal.isPresent()) {
+			Cargo cargo = opicinal.get();
+			for(Funcionario func : cargo.getListaFuncionarios()) {
+				System.out.println(func.getNome());
+			}
 		} else {
 			System.out.println("ID inválido");
 		}

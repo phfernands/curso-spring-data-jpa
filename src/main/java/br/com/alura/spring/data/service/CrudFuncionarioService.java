@@ -1,8 +1,10 @@
 package br.com.alura.spring.data.service;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ public class CrudFuncionarioService {
 	private final FuncionarioRepository repository;
 	private final UnidadeTrabalhoRepository unidadeRepository;
 	private final CargoRepository cargoRepository;
-	private Boolean system = true;
+	
 
 	public CrudFuncionarioService(FuncionarioRepository repository, CargoRepository cargoRepository,
 			UnidadeTrabalhoRepository unidadeRepository) {
@@ -29,35 +31,53 @@ public class CrudFuncionarioService {
 	}
 
 	public void inicializar(Scanner scanner) {
-		System.out.println("Qual ação voce deseja reazilar?");
-		System.out.println("1 - Salvar");
-		System.out.println("2 - Atualizar dados");
-		System.out.println("3 - Listar funcionarios");
-		System.out.println("4 - Deletar funcionario");
-		System.out.println("0 - Sair");
 		
-		int action = scanner.nextInt();
-		
-		switch (action) {
-		case 1:
-			salvar(scanner);
-			break;
+		Boolean system = true;
+	
+		while(system == true ) {
 			
-		case 2:
-			atualizar(scanner);
-			break;
+			System.out.println("Qual ação voce deseja reazilar?");
+			System.out.println("1 - Salvar");
+			System.out.println("2 - Atualizar dados");
+			System.out.println("3 - Listar funcionarios");
+			System.out.println("4 - Deletar funcionario");
+			System.out.println("5 - Adicionar unidades de trabalho para o funcionario");
+			System.out.println("6 - Visualizar dados de um funcionario");
+			System.out.println("0 - Sair");
 			
-		case 3:
-			listar();
-			break;
+			int action = scanner.nextInt();
 			
-		case 4:
-			deletar(scanner);
-			break;
-
-		default:
-			system = false;
-			break;
+			
+			switch (action) {
+			case 1:
+				salvar(scanner);
+				break;
+				
+			case 2:
+				atualizar(scanner);
+				break;
+				
+			case 3:
+				listar();
+				break;
+				
+			case 4:
+				deletar(scanner);
+				break;
+				
+			case 5:
+				adicionarUnidadeTrablho(scanner);
+				break;
+				
+			case 6:
+				visualizar(scanner);
+				break;
+				
+			default:
+				system = false;
+				break;
+				
+			}
 		}
 		
 	}
@@ -81,12 +101,6 @@ public class CrudFuncionarioService {
 		Optional<Cargo> optCargo = cargoRepository.findById(id);
 		Cargo cargo = optCargo.get();
 		funcionario.setCargo(cargo);
-
-		System.out.println("Digite o ID da unidade");
-		Integer id2 = scanner.nextInt();
-		Optional<UnidadeTrabalho> optUnidade = unidadeRepository.findById(id2);
-		UnidadeTrabalho uniTrab = optUnidade.get();
-		funcionario.setUnidadeTrabalho(uniTrab);
 
 		repository.save(funcionario);
 		System.out.println("Funcionario salvo");
@@ -118,12 +132,6 @@ public class CrudFuncionarioService {
 			Cargo cargo = optCargo.get();
 			funcionario.setCargo(cargo);
 
-			System.out.println("Digite o ID da unidade");
-			Integer id3 = scanner.nextInt();
-			Optional<UnidadeTrabalho> optUnidade = unidadeRepository.findById(id3);
-			UnidadeTrabalho uniTrab = optUnidade.get();
-			funcionario.setUnidadeTrabalho(uniTrab);
-
 			repository.save(funcionario);
 			System.out.println("Funcionario atualizado");
 		} else {
@@ -148,6 +156,74 @@ public class CrudFuncionarioService {
 			System.out.println("ID " + id + " inexistete.");
 		}
 		
+	}
+	
+	private Set<UnidadeTrabalho> adicionar(Scanner scanner) {
+		Boolean isTrue = true;
+		Set<UnidadeTrabalho> unidades = new HashSet<UnidadeTrabalho>();
+		
+		while(isTrue) {
+			System.out.println("Digite o ID da unidade que o funcionario irá trabalhar. (Digite '0' para sair)");
+			Integer id = scanner.nextInt();
+			
+			if(id > 0) {
+				System.out.println("----------------------------------------------------------------");
+				System.out.println("Unidade ID: " + id);
+				Optional<UnidadeTrabalho> opicional = unidadeRepository.findById(id);
+				System.out.println("----------------------------------------------------------------");
+				
+				if(opicional.isPresent()) {
+					unidades.add(opicional.get());
+				} else {
+					System.out.println("ID de Unidade inexistente");
+				}
+			} else {
+				isTrue = false;
+			}
+		}
+		return unidades;
+	}
+	
+	private void adicionarUnidadeTrablho(Scanner scanner) {
+		
+		System.out.println("Digite o ID do funcionario para adicionar sua(s) unidade(s) de trabalho:");
+		Integer id = scanner.nextInt();
+		
+		Optional<Funcionario> opicional = repository.findById(id);
+		if(opicional.isPresent()) {
+			Funcionario funcionario = opicional.get();
+			Set<UnidadeTrabalho> novaUnidade = this.adicionar(scanner);
+			funcionario.getUnidadeTrabalho().addAll(novaUnidade);
+			repository.save(funcionario);
+			System.out.println("Unidade(s) de trabalho adicionada(s).");
+		}
+	}
+	
+	private void visualizar(Scanner scanner) {
+		System.out.println("Digite o ID do funcionaria para visualizar seus dados:");
+		Integer id = scanner.nextInt();
+		
+		Optional<Funcionario> opicional = repository.findById(id);
+		if(opicional.isPresent()) {
+			Funcionario func = opicional.get();
+			
+			System.out.println("-DADOS DO FUNCIONARIO-");
+			System.out.println("ID: " + func.getId());
+			System.out.println("Nome: " + func.getNome());
+			System.out.println("CPF: " +  func.getCpf());
+			System.out.println("Cargo: " + func.getCargo());
+			System.out.println("Salario: " + func.getSalario());
+			System.out.println(" ");
+			System.out.println("Unidade: (");
+			for(UnidadeTrabalho unidade : func.getUnidadeTrabalho()) {
+				System.out.println("Nome: " + unidade.getDescricao());
+				System.out.println("Endereco: " + unidade.getEndereco());
+			}
+			System.out.println(")");
+			System.out.println(" ");
+		} else {
+			System.out.println("ID " + id + " inexistete.");
+		}
 	}
 
 }

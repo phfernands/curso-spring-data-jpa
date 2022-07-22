@@ -2,13 +2,17 @@ package br.com.alura.spring.data.orm;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -27,12 +31,12 @@ public class Funcionario {
 	private LocalDate dataContratacao = LocalDate.now();
 
 	@ManyToOne
-	@JoinColumn(name = "cargo_id")
+	@JoinColumn(name = "cargo_id", nullable = false)
 	private Cargo cargo;
 
-	@ManyToOne
-	@JoinColumn(name = "unidade_trabalho_id")
-	private UnidadeTrabalho unidadeTrabalho;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "funcionarios_unidade_trabalho", joinColumns = @JoinColumn(name = "funcionario_id"), inverseJoinColumns = @JoinColumn(name = "unidade_id"))
+	private Set<UnidadeTrabalho> unidadeTrabalho;
 
 	public String getNome() {
 		return nome;
@@ -58,20 +62,12 @@ public class Funcionario {
 		this.salario = salario;
 	}
 
-	public Cargo getCargo() {
-		return cargo;
+	public String getCargo() {
+		return cargo.getCargo();
 	}
 
 	public void setCargo(Cargo cargo) {
 		this.cargo = cargo;
-	}
-
-	public UnidadeTrabalho getUnidadeTrabalho() {
-		return unidadeTrabalho;
-	}
-
-	public void setUnidadeTrabalho(UnidadeTrabalho unidadeTrabalho) {
-		this.unidadeTrabalho = unidadeTrabalho;
 	}
 
 	public Integer getId() {
@@ -80,6 +76,16 @@ public class Funcionario {
 
 	public LocalDate getDataContratacao() {
 		return dataContratacao;
+	}
+	
+	
+
+	public Set<UnidadeTrabalho> getUnidadeTrabalho() {
+		return unidadeTrabalho;
+	}
+
+	public void setUnidadeTrabalho(Set<UnidadeTrabalho> unidadeTrabalho) {
+		this.unidadeTrabalho = unidadeTrabalho;
 	}
 
 	@Override

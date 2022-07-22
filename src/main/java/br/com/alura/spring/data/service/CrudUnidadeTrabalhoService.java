@@ -12,42 +12,47 @@ import br.com.alura.spring.data.repository.UnidadeTrabalhoRepository;
 public class CrudUnidadeTrabalhoService {
 
 	private final UnidadeTrabalhoRepository trabalhoRepository;
-	private Boolean system = true;
+	
 
 	public CrudUnidadeTrabalhoService(UnidadeTrabalhoRepository trabalhoRepository) {
 		this.trabalhoRepository = trabalhoRepository;
 	}
 
 	public void inicializar(Scanner scanner) {
-		System.out.println("Qual ação voce deseja reazilar?");
-		System.out.println("1 - Salvar");
-		System.out.println("2 - Atualizar dados");
-		System.out.println("3 - Lista de unidades");
-		System.out.println("4 - Deletar unidade");
-		System.out.println("0 - Sair");
 		
-		int action = scanner.nextInt();
+		Boolean system = true;
 		
-		switch (action) {
-		case 1:
-			salvar(scanner);
-			break;
+		while(system == true) {
+			System.out.println("Qual ação voce deseja reazilar?");
+			System.out.println("1 - Salvar");
+			System.out.println("2 - Atualizar dados");
+			System.out.println("3 - Lista de unidades");
+			System.out.println("4 - Deletar unidade");
+			System.out.println("0 - Sair");
 			
-		case 2:
-			atualizar(scanner);
-			break;
-		
-		case 3:
-			listar();
-			break;
+			int action = scanner.nextInt();
 			
-		case 4:
-			deletar(scanner);
-			break;
+			switch (action) {
+			case 1:
+				salvar(scanner);
+				break;
+				
+			case 2:
+				atualizar(scanner);
+				break;
+			
+			case 3:
+				listar();
+				break;
+				
+			case 4:
+				deletar(scanner);
+				break;
 
-		default:
-			system = false;
-			break;
+			default:
+				system = false;
+				break;
+			}
 		}
 		
 	}
