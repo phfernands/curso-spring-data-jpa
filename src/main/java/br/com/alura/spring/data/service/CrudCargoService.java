@@ -18,7 +18,7 @@ public class CrudCargoService {
 		this.cargoRepository = cargoRepository;
 	}
 
-	public void inicial(Scanner scanner) {
+	public void inicializar(Scanner scanner) {
 		
 		Boolean system = true;
 		
